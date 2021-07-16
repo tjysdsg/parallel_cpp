@@ -3,5 +3,4 @@ project(thran)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(thran main.cpp)
-target_link_libraries(thran)
+add_executable(sharing_memory sharing_memory.cpp)
