@@ -3,7 +3,8 @@
 #include <vector>
 
 #ifdef _DEBUG
-#warning "Build this in release mode so that the microbenchmark output is accurate"
+#warning                                                                       \
+    "Build this in release mode so that the microbenchmark output is accurate"
 #endif
 
 #include <benchmark/benchmark.h>
@@ -17,17 +18,23 @@ std::vector<int> initialize_random_array() {
   std::mt19937 gen(rd());
   std::uniform_int_distribution<int> distrib(-1E9, 1E9);
 
-  for (int i = 0; i < N; ++i) { ret[i] = distrib(gen); }
+  for (int i = 0; i < N; ++i) {
+    ret[i] = distrib(gen);
+  }
   return ret;
 }
 
 void f(int *a, int *b) {
-  for (int i = 0; i < N; ++i) { a[i] += b[i]; }
+  for (int i = 0; i < N; ++i) {
+    a[i] += b[i];
+  }
 }
 
 void f_simd(int *a, int *b) {
 #pragma omp simd
-  for (int i = 0; i < N; ++i) { a[i] += b[i]; }
+  for (int i = 0; i < N; ++i) {
+    a[i] += b[i];
+  }
 }
 
 static void BM_f(benchmark::State &state) {

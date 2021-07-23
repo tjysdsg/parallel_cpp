@@ -1,5 +1,6 @@
 /**
- * \brief An ABA problem example adapted from https://en.wikipedia.org/wiki/ABA_problem
+ * \brief An ABA problem example adapted from
+ * https://en.wikipedia.org/wiki/ABA_problem
  */
 #include <atomic>
 #include <iostream>
@@ -16,7 +17,9 @@ public:
 
 std::ostream &operator<<(std::ostream &os, Node *node) {
   os << node->val;
-  if (node->next) { os << " -> " << node->next; }
+  if (node->next) {
+    os << " -> " << node->next;
+  }
   return os;
 }
 
@@ -27,20 +30,26 @@ public:
   Node *pop() {
     while (true) {
       Node *ret_ptr = top_ptr;
-      if (!ret_ptr) return nullptr;
+      if (!ret_ptr)
+        return nullptr;
       Node *next_ptr = ret_ptr->next;
-      if (top_ptr.compare_exchange_weak(ret_ptr, next_ptr)) { return ret_ptr; }
+      if (top_ptr.compare_exchange_weak(ret_ptr, next_ptr)) {
+        return ret_ptr;
+      }
     }
   }
 
   Node *pop_sleep() {
     while (true) {
       Node *ret_ptr = top_ptr;
-      if (!ret_ptr) return nullptr;
+      if (!ret_ptr)
+        return nullptr;
       Node *next_ptr = ret_ptr->next;
 
       std::this_thread::sleep_for(std::chrono::seconds(1));
-      if (top_ptr.compare_exchange_weak(ret_ptr, next_ptr)) { return ret_ptr; }
+      if (top_ptr.compare_exchange_weak(ret_ptr, next_ptr)) {
+        return ret_ptr;
+      }
     }
   }
 
@@ -48,7 +57,9 @@ public:
     while (true) {
       Node *next_ptr = top_ptr;
       obj_ptr->next = next_ptr;
-      if (top_ptr.compare_exchange_weak(next_ptr, obj_ptr)) { return; }
+      if (top_ptr.compare_exchange_weak(next_ptr, obj_ptr)) {
+        return;
+      }
     }
   }
 };
@@ -62,7 +73,8 @@ void thread1() {
   g_stack.pop_sleep();
   Node *top = g_stack.top_ptr;
   if (top->val == "Invalid B") {
-    std::cout << "ABA bug occurred. At the end of Thread 1, the stack is: " << g_stack.top_ptr.load() << "\n";
+    std::cout << "ABA bug occurred. At the end of Thread 1, the stack is: "
+              << g_stack.top_ptr.load() << "\n";
   }
 }
 
@@ -73,7 +85,8 @@ void thread2() {
   A->next = C;
   g_stack.push(A); /// stack: top A C
 
-  std::cout << "Thread 2 finished, the stack is: " << g_stack.top_ptr.load() << '\n';
+  std::cout << "Thread 2 finished, the stack is: " << g_stack.top_ptr.load()
+            << '\n';
   B->val = "Invalid B";
 }
 
