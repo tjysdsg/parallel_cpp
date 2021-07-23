@@ -4,7 +4,7 @@
 int main() {
   int index; /// index in the loop
   std::atomic<int> team = 0;
-#pragma omp parallel num_threads(3) shared(team) /// team is shared across 3 threads
+#pragma omp parallel num_threads(3) default(none) shared(team, index) /// team is shared across 3 threads
   {
     /// increment-and-get, this is atomic https://en.cppreference.com/w/cpp/atomic/atomic/operator_arith
     int t = ++team;

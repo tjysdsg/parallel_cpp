@@ -13,11 +13,17 @@ add_subdirectory(depend/benchmark)
 add_executable(sharing_memory sharing_memory.cpp)
 add_executable(aba_problem aba_problem.cpp)
 
-find_package(OpenMP 5.0 REQUIRED)
+find_package(OpenMP 4.5 REQUIRED)
 
 add_executable(openmp_parallel_for openmp_parallel_for.cpp)
 target_link_libraries(openmp_parallel_for PRIVATE OpenMP::OpenMP_CXX)
 
 add_executable(openmp_simd openmp_simd.cpp)
-target_compile_options(openmp_simd PRIVATE -fno-slp-vectorize)
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(openmp_simd PRIVATE -fno-slp-vectorize)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(openmp_simd PRIVATE -fno-tree-slp-vectorize)
+endif ()
+
 target_link_libraries(openmp_simd PRIVATE OpenMP::OpenMP_CXX benchmark::benchmark)
